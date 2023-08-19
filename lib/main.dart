@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bloc/bloc.dart';
 import 'package:flutter_bloc_pattern/blocs/counter.dart';
 
 void main() {
@@ -31,7 +30,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Counter BLoc",
         ),
       ),
@@ -42,7 +41,7 @@ class _HomePageState extends State<HomePage> {
             StreamBuilder(
               builder: (context, snapshot) => Text(
                 "You have pushed the button this many times: ${snapshot.data}",
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
               stream: counter.output,
             ),
@@ -54,14 +53,14 @@ class _HomePageState extends State<HomePage> {
                     counter.inputan.add("minus");
                   },
                   tooltip: 'Decrement',
-                  child: Icon(Icons.remove),
+                  child: const Icon(Icons.remove),
                 ),
                 FloatingActionButton(
                   onPressed: () {
                     counter.inputan.add("add");
                   },
                   tooltip: 'Increment',
-                  child: Icon(Icons.add),
+                  child: const Icon(Icons.add),
                 )
               ],
             )
