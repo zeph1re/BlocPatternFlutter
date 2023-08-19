@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_pattern/blocs/counter.dart';
 
+// Bloc Management State
+
 void main() {
   runApp(const MyApp());
 }
@@ -46,7 +48,7 @@ class _HomePageState extends State<HomePage> {
               ),
               stream: counter.output,
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Row(
