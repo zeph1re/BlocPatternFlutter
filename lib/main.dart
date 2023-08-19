@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("build");
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -44,6 +45,9 @@ class _HomePageState extends State<HomePage> {
                 style: const TextStyle(fontSize: 16),
               ),
               stream: counter.output,
+            ),
+            SizedBox(
+              height: 20,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
