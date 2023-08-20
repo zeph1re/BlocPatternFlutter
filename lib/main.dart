@@ -32,7 +32,14 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     print("build");
-    var bloc = BlocProvider.of<CounterBloc>(context);
+    // var bloc = BlocProvider.of<CounterBloc>(context, listen : true);
+    // listen digunakan untuk memantau jika terdapat widget baru di luar HomePage
+
+    // context.read, listen = false
+    var bloc = context.read<CounterBloc>();
+
+    // context.read, listen = false
+    // var bloc = context.watch<CounterBloc>();
     return Scaffold(
       appBar: AppBar(
         title: const Text(
