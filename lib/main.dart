@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc_pattern/blocs/counter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc_pattern/provider/counter.dart';
 
-// Bloc Management State
+// Bloc Provider
 
 void main() {
   runApp(const MyApp());
@@ -12,9 +13,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: HomePage(),
-    );
+    return MaterialApp(
+        home: BlocProvider(
+      create: (context) => CounterBloc(),
+      child: const HomePage(),
+    ));
   }
 }
 
@@ -26,11 +29,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  CounterBloc counter = CounterBloc();
-
   @override
   Widget build(BuildContext context) {
     print("build");
+    var bloc = BlocProvider.of<CounterBloc>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -41,13 +43,16 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            StreamBuilder(
-              builder: (context, snapshot) => Text(
-                "You have pushed the button this many times: ${snapshot.data}",
-                style: const TextStyle(fontSize: 16),
-              ),
-              stream: counter.output,
-            ),
+            BlocBuilder<CounterBloc, int>(
+                bloc: bloc,
+                builder: (context, state) {
+                  print("State = $state .... Counter state : ${bloc.counter}");
+                  return Text(
+                      (state == bloc.counter)
+                          ? "You have pushed the button this many times: $state"
+                          : "You have pushed the button this many times: ${bloc.counter}",
+                      style: const TextStyle(fontSize: 16));
+                }),
             const SizedBox(
               height: 20,
             ),
@@ -56,14 +61,14 @@ class _HomePageState extends State<HomePage> {
               children: [
                 FloatingActionButton(
                   onPressed: () {
-                    counter.inputan.add("minus");
+                    bloc.add('minus');
                   },
                   tooltip: 'Decrement',
                   child: const Icon(Icons.remove),
                 ),
                 FloatingActionButton(
                   onPressed: () {
-                    counter.inputan.add("add");
+                    bloc.add("add");
                   },
                   tooltip: 'Increment',
                   child: const Icon(Icons.add),
