@@ -1,23 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bloc_pattern/provider/counter_cubit.dart';
+import 'package:flutter_bloc_pattern/provider/theme.dart';
 
 // Bloc Provider
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final ThemeData dark = ThemeData.dark();
+  final ThemeData light = ThemeData.light();
+
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: BlocProvider(
-      create: (context) => CounterCubit(),
-      child: const HomePage(),
-    ));
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => CounterCubit()),
+          BlocProvider(create: (context) => ThemeBloc(false)),
+        ],
+        child: BlocBuilder<ThemeBloc, bool>(
+          builder: (context, state) => MaterialApp(
+            theme: state ? dark : light,
+            debugShowCheckedModeBanner: false,
+            home: HomePage(),
+          ),
+        ));
   }
 }
 
@@ -33,25 +44,42 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     print("build");
     return Scaffold(
-      appBar: AppBar(title: const Text('Counter')),
-      body: BlocBuilder<CounterCubit, int>(
-        builder: (context, count) =>
-            Center(child: Text('Angka saat ini adalah $count')),
+      appBar: AppBar(title: const Text('Counter Apps')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Text
+            BlocBuilder<CounterCubit, int>(
+              builder: (context, state) => Text(
+                "Angka saat ini : $state",
+                style: TextStyle(fontSize: 20),
+              ),
+            ),
+            // Button
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                FloatingActionButton(
+                  onPressed: () {
+                    context.read<CounterCubit>().decrement();
+                  },
+                  child: const Icon(Icons.remove),
+                ),
+                FloatingActionButton(
+                    onPressed: () {
+                      context.read<CounterCubit>().increment();
+                    },
+                    child: const Icon(Icons.add))
+              ],
+            )
+          ],
+        ),
       ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () => context.read<CounterCubit>().increment(),
-          ),
-          const SizedBox(height: 4),
-          FloatingActionButton(
-            child: const Icon(Icons.remove),
-            onPressed: () => context.read<CounterCubit>().decrement(),
-          ),
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.read<ThemeBloc>().changeTheme(),
+        child: const Icon(Icons.color_lens),
       ),
     );
   }
